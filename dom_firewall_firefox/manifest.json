@@ -1,7 +1,7 @@
 {
-  "name": "DOM Firewall",
-  "version": "0.2",
-  "description": "Protect yourself against XSS and CSRF",
+  "name": "XSnare",
+  "version": "1.0",
+  "description": "First XSnare release: Protect yourself against XSS",
   "permissions": ["<all_urls>", "activeTab", "storage", "webRequest", "webRequestBlocking", "tabs"],
   "options_ui": {
     "page": "options.html",
@@ -36,7 +36,7 @@
 
   "applications": {
     "gecko": {
-      "id": "domfirewall@example.com"
+      "id": "xsnare@example.com"
     }
   },
 
