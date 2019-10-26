@@ -18,6 +18,7 @@ let startLengths = [];
 let xhrSanitizerList = [];
 let xhrConfigList = [];
 let xhrStartLengths = [];
+let loadedProbes = [];
 
 String.prototype.replaceBetween = function(start, end, what) {
     return this.substring(0, start) + what + this.substring(end);
@@ -252,7 +253,17 @@ function isRunningWordPress(HTMLString, url) {
   return HTMLString.includes("wp-content") || HTMLString.includes("wp-toolbar") || url.includes("wp-content") || url.includes("wp-admin");
 }
 
+function isRunningJoomla(HTMLString, url) {
+  return HTMLString.includes('<meta name="generator" content="Joomla! - Open Source Content Management"/>');
+}
+
+function isRunningLimeSurvey(HTMLString, url) {
+  return HTMLString.includes('<meta name=\"generator\" content=\"LimeSurvey http://www.limesurvey.org\" />') || HTMLString.includes('<a class="navbar-brand" href="/index.php/admin/index">');
+}
+
+
 function runProbes(HTMLString, url, domain) {
+  loadedProbes = [];
   //this might be done better by loading a signature-like language for probes
   //for now i'm hardcoding known probes
   //probes are a list of a known probe i.e 'wordpress' and any additional versioning information necessary
@@ -261,6 +272,7 @@ function runProbes(HTMLString, url, domain) {
   //probe for wordpress detection + default plugin versioning. This versioning method only works for
   //users with access to wp-admin/plugins.php
   if (isRunningWordPress(HTMLString, url)) {
+    loadedProbes.push('wordpress');
     var index = probes.length;
     probes['WordPress'] = {};
     //probes.push(['WordPress', {}]);
@@ -286,6 +298,12 @@ function runProbes(HTMLString, url, domain) {
       probes['WordPress'] = null;
       console.log(error);
     })
+  } else if (isRunningJoomla(HTMLString, url)) {
+    loadedProbes.push('joomla');
+    probes['Joomla'] = {};
+  } else if (isRunningLimeSurvey(HTMLString, url)) {
+    loadedProbes.push('limesurvey');
+    probes['LimeSurvey'] = {};
   }
 
   //the domain name itself is a probe with no default versioning
@@ -311,6 +329,12 @@ function loadSignatures(HTMLString, url, tabId) {
     if (probes[loadedProbes[i]] && Object.keys(probes[loadedProbes[i]]).length < 1) {
       //request for versioning has not come back yet, wait
       //TODO: fix race condition here, insert interval on loading
+    }
+  }
+  if (loadedProbes.length == 1 && !probes[loadedProbes[0]]) {
+    let genericSigs = mainFrameSignatures['generic'];
+    for (i=0; i < genericSigs.length; i++) {
+      toCheck.push(genericSigs[i]);
     }
   }
 

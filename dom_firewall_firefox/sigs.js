@@ -8,9 +8,11 @@ const main_frame_signatures = {
             software: 'WordPress',
             softwareDetails: 'responsive-cookie-consent',
             version: '1.5',
+            description: '',
             type: 'string',
-            sanitizer: 'regex',
-            typeDet: 'single',
+            typeDet: 'single-unique',
+            sigType: ['incomplete', 'complete'],
+            sigOccurrence: 'unique',
             endPoints: ['<div class=\"rcc-panel group\"', 'class=\"rcc-info-btn\" >MORE INFO</a>']
         },
         {
@@ -18,15 +20,10 @@ const main_frame_signatures = {
             software: 'WordPress',
             softwareDetails: 'responsive-cookie-consent',
             version: '1.5',
-            typeDet: 'multiple',
             type: 'string',
-            sanitizer: 'regex',
-            config: [
-                    '/^[A-Za-z ]+$/',
-                    '/\d+/',
-                    '/^[0-9](\.[0-9]+)?$/',
-                    '/^[0-9](\.[0-9]+)?$/'
-                    ],
+            typeDet: 'multiple-unique',
+            description: '',
+            sigType: ['complete', 'complete'],
             endPoints: [
                 ['<input id="rcc_settings[font]" name="rcc_settings[font]" type="text"', '<label class="description" for="rcc_settings[font]">'],
                 ['<input id="rcc_settings[width]" name="rcc_settings[width]" type="text"', '<label class="description" for="rcc_settings[width]">'],
@@ -40,10 +37,8 @@ const main_frame_signatures = {
             softwareDetails: 'responsive-cookie-consent',
             version: '1.5',
             type: 'string',
-            typeDet: 'single',
-            sanitizer: 'regex',
-            config: '/^[0-9](\.[0-9]+)?$/',
-            endPoints: ['<input id="rcc_settings[border-size]" name="rcc_settings[border-size]" type="text" value="', '<label class="description" for="rcc_settings[border-size]">']
+            typeDet: 'single-unique',
+            endPoints: ['<input id="rcc_settings[border-size]" name="rcc_settings[border-size]" type="text" value', '<label class="description" for="rcc_settings[border-size]">']
         },
 
         {
@@ -81,7 +76,7 @@ const main_frame_signatures = {
             softwareDetails: '31sdasfas',
             version: '1.0',
             description: '',
-            type: 'htmlTag',
+            type: 'string',
             typeDet: 'single-unique',
             sigType: ['complete', 'complete'],
             sigOccurrence: 'unique',
@@ -578,7 +573,7 @@ const main_frame_signatures = {
         },
         {
             url: 'wp-admin/admin.php?page=caldera-forms',
-            software: '#wordPress',
+            software: '#wordPress #wpPlugin',
             softwareDetails: 'caldera-forms',
             version: '1.5.9.1',
             type: 'listener',
@@ -588,7 +583,7 @@ const main_frame_signatures = {
                 sanitizer: 'escape',
                 type: 'string',
                 url: 'wp-admin/admin-ajax.php',
-                typeDet: 'single',
+                typeDet: 'single-unique',
                 sigType: ['complete', 'complete'],
                 endPoints: ['<p><strong>', '[AltBody]']
             },
@@ -913,6 +908,73 @@ const main_frame_signatures = {
 
 
 
+    ],
+    'Joomla' : [
+        {
+            url: 'administrator/index.php?option=com_config',
+            software: 'Joomla',
+            softwareDetails: '',
+            version: '3.9.1',
+            type: 'string',
+            typeDet: 'single-unique',
+            endPoints: ['<input name="jform[filters][1][filter_tags]" type="text" id="jform_filters1_filter_tags" class="novalidate" title="Filter Tags<sup>2</sup>" value="',
+                        '<input name="jform[filters][1][filter_attributes]" type="text" id="jform_filters1_filter_attributes" class="novalidate" title="Filter Attributes<sup>3</sup>"']
+        }
+    ],
+
+    'LimeSurvey': [
+        {
+            url: 'index.php',
+            software: 'LimeSurvey',
+            softwareDetails: '',
+            version: '3.17.13',
+            type: 'string',
+            typeDet: 'multiple',
+            endPoints: [ ['<h1 class=\" survey-name  text-center\"  >', '<div class=\" survey-description  text-info text-center\" >'],
+                         ['<div class=\" group-title   text-center h3 space-col\" >', '<div class=\" group-description  row well space-col\" >']
+                         ]
+
+        },
+        {
+            url: 'index.php/admin/survey?mandatory=1&sid=',
+            software: 'LimeSurvey',
+            softwareDetails: '',
+            version: '3.17.13',
+            type: 'string',
+            typeDet: 'multiple-several',
+            endPoints: [ ['<input type=\"hidden\" name=\"sid\" value=\"','<div class=\"modal-footer modal-footer-buttons\">'],
+                         ['<input type="hidden" name="sid" value=">', '<input type=\"hidden\" name=\"aValidQuestionTypes\" value=\"']
+            ],
+            endPointsPositions: [ [2,5],
+                                  [4,1]
+                                ]
+        }
+    ],
+
+    'generic' : [
+        {
+            url: 'plugins/content/sige/plugin_sige/print.php',
+            software: '',
+            softwareDetails: '',
+            version: '',
+            type: 'all',
+            typeDet: 'single',
+            endPoints: []
+        },
+
+        {
+            url: 'https://www.cs.ubc.ca/~jpazos/',
+            software: '',
+            softwareDetails: '31sdasfas',
+            version: '1.0',
+            description: '',
+            type: 'string',
+            sanitizer: 'escape',
+            typeDet: 'single-unique',
+            sigType: ['complete', 'complete'],
+            sigOccurrence: 'unique',
+            endPoints: ['<button type="button" onclick="myFunction()">', '<script id="foo" type="text/javascript">']
+        },
     ]
 };
 
