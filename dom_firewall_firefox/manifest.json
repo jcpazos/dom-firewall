@@ -2,7 +2,7 @@
   "name": "XSnare",
   "version": "1.1",
   "description": "Updated DOMPurify script, removed jQuery",
-  "permissions": ["<all_urls>", "activeTab", "storage", "webRequest", "webRequestBlocking", "tabs"],
+  "permissions": ["<all_urls>", "activeTab", "storage", "webRequest", "webRequestBlocking", "tabs", "notifications"],
   "options_ui": {
     "page": "options.html",
     "browser_style": true

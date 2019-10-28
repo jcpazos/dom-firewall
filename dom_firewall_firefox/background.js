@@ -19,6 +19,12 @@ let xhrSanitizerList = [];
 let xhrConfigList = [];
 let xhrStartLengths = [];
 let loadedProbes = [];
+let hasBeenSanitized = false;
+ 
+const notificationTitle = "Page has been sanitized!";
+const notificationMessage = "XSnare has detected a vulnerability in this page and attempted to eliminate malicious content. You should be able to proceed browsing safely.\n" +
+                            "If this page contains important confidential information (e.g., a saved Credit Card number, a Social Insurance Number, etc.), consider using an alternative page.\n" +
+                            "If possible, contact the administrator of the page to notify them of this issue.";
 
 String.prototype.replaceBetween = function(start, end, what) {
     return this.substring(0, start) + what + this.substring(end);
@@ -38,6 +44,7 @@ function mainFrameListener(details) {
   xhrStartLengths = [];
   xhrSanitizerList = [];
   xhrConfigList = [];
+  hasBeenSanitized = false;
 
   probes = {};
   let filter = browser.webRequest.filterResponseData(details.requestId);
@@ -58,6 +65,14 @@ function mainFrameListener(details) {
     try {
         //TODO: mark verified scripts as 'safe' so contentscript doesn't check them again for dynamic checks
         str = verifyHTML(str, details.url, details.tabId);
+        if (hasBeenSanitized) {
+          browser.notifications.create({
+            "type": "basic",
+            "title": notificationTitle,
+            "message": notificationMessage,
+            "iconUrl": browser.extension.getURL("images/xsnare_triggered.png")
+          })
+        }
     } catch(err) {
         debugger;
         console.log("Error when verifying HTML: " + err);
@@ -459,6 +474,7 @@ function loadSignatures(HTMLString, url, tabId) {
 }
 
 function sanitizeInjectionPoint(HTMLString, startIndex, endIndex, startLength, sanitizer, config) {
+  hasBeenSanitized = true;
   //use signature sanitizer method if exists
   if (sanitizer) {
     return sanitizerAPI[sanitizer](HTMLString, startIndex, endIndex, startLength, config);
