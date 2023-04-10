@@ -9,7 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "selenium-webdriver": "^4.0.0-alpha.4",
+    "selenium-webdriver": "^4.8.2",
     "ya-csv": "^0.10.1"
   }
 }
